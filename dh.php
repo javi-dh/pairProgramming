@@ -14,8 +14,10 @@
 	$DH->altaNuevoCurso('Mobile', 20002, 2);
 	$DH->altaNuevoCurso('UX', 20004, 4);
 
-	$DH->altaProfesorAdjunto('Lorenzo', 'Lamas', 1524, 30);
-	$DH->altaProfesorTitular('Marc', 'Antony', 2727, 'Frontend');
+	$DH->altaProfesorTitular('Walter', 'White', 2727, 'Frontend');
+	$DH->altaProfesorAdjunto('Jessi', 'Pinkman', 1524, 30);
+	$DH->altaProfesorTitular('Marc', 'Antony', 1818, 'Frontend');
+	$DH->altaProfesorAdjunto('Lorenzo', 'Lamas', 1685, 10);
 	$DH->altaProfesorTitular('Pan', 'Dero', 3453, '.NET');
 
 	echo $DH->altaNuevoAlumno('Romi', 'Lanesas', 28023);
@@ -48,23 +50,15 @@
 	echo "<br>================<br>";
 
 	$DH->asignarProfesores(20001, 2727, 1524);
+	$DH->asignarProfesores(20002, 1818, 1685);
 	echo !$DH->bajaCurso(20004) ? 'No hay curso con ese código' : '';
 	echo !$DH->bajaProfesor(3453) ? 'No hay profesor con ese código' : '';
 
-	$cursoQueSeBusca = $DH->getCursoPorCodigo(20001);
+	$cursoABuscar = $DH->getCursoPorCodigo(20001);
 	$alumnoQueSeBusca = $DH->getAlumnoPorCodigo(28023);
-	$cursoQueSeBusca->eliminarAlumno($alumnoQueSeBusca);
+	$cursoABuscar->eliminarAlumno($alumnoQueSeBusca);
 
 	$otroAlumnoQueSeBusca = $DH->getAlumnoPorCodigo(45678);
-
-	foreach ($DH->getListadoCursos() as $curso) {
-		if ($curso->getCodigoCurso() == 20001) {
-			echo "{$curso->getNombreCurso()} - vacantes: " . ( $curso->getCupoMaximoAlumnos() - count($curso->getAlumnos()) ) . '<br>';
-		}
-		if ($curso->getCodigoCurso() == 20002) {
-			echo "{$curso->getNombreCurso()} - vacantes: " . ( $curso->getCupoMaximoAlumnos() - count($curso->getAlumnos()) ) . '<br>';
-		}
-	}
 
 	// myDebug($DH);
 ?>
@@ -75,17 +69,19 @@
 		<title></title>
 	</head>
 	<body>
-		<h1><?php echo $cursoQueSeBusca->getNombreCurso() . ' - cod: ' . $cursoQueSeBusca->getCodigoCurso(); ?></h1>
-		<h2>Cupo máximo: <?php echo $cursoQueSeBusca->getCupoMaximoAlumnos() ?></h2>
-		<h3>Profesores</h3>
-		<p><b>Titular:</b> <?php echo $cursoQueSeBusca->getProfesorTitular()->getNombre() . ' ' . $cursoQueSeBusca->getProfesorTitular()->getApellido() ?></p>
-		<p><b>Adjunto:</b> <?php echo $cursoQueSeBusca->getProfesorAdjunto()->getNombre() . ' ' . $cursoQueSeBusca->getProfesorAdjunto()->getApellido() ?></p>
-		<ul>
-			<?php foreach ($cursoQueSeBusca->getAlumnos() as $unAlumno): ?>
-			<li><?php echo $unAlumno->getNombre() . ' ' . $unAlumno->getApellido() . ' - cod: ' . $unAlumno->getCodigo()?></li>
-			<?php endforeach; ?>
-		</ul>
-		<b>Vacantes: <?php echo $cursoQueSeBusca->getCupoMaximoAlumnos() - count($cursoQueSeBusca->getAlumnos())  ?></b>
+		<?php foreach ($DH->getListadoCursos() as $curso): ?>
+			<h1><?php echo $curso->getNombreCurso() . ' - cod: ' . $curso->getCodigoCurso(); ?></h1>
+			<h2>Cupo máximo: <?php echo $curso->getCupoMaximoAlumnos() ?></h2>
+			<h3>Profesores</h3>
+			<p><b>Titular:</b> <?php echo $curso->getProfesorTitular()->getNombre() . ' ' . $curso->getProfesorTitular()->getApellido() ?></p>
+			<p><b>Adjunto:</b> <?php echo $curso->getProfesorAdjunto()->getNombre() . ' ' . $curso->getProfesorAdjunto()->getApellido() ?></p>
+			<ul>
+				<?php foreach ($curso->getAlumnos() as $unAlumno): ?>
+				<li><?php echo $unAlumno->getNombre() . ' ' . $unAlumno->getApellido() . ' - cod: ' . $unAlumno->getCodigo()?></li>
+				<?php endforeach; ?>
+			</ul>
+			<b>Vacantes: <?php echo $curso->getCupoMaximoAlumnos() - count($curso->getAlumnos())  ?></b>
+		<?php endforeach; ?>
 
 		<hr>
 
@@ -93,7 +89,7 @@
 		<p>Inscripta a:</p>
 		<ul>
 			<?php foreach ($otroAlumnoQueSeBusca->getCursos() as $curso): ?>
-			<li><?php echo $curso->getNombreCurso(); ?></li>
+			<li><?php echo $curso->getNombreCurso() . ' - cod: ' . $curso->getCodigoCurso(); ?></li>
 			<?php endforeach; ?>
 		</ul>
 	</body>
