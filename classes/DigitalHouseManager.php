@@ -67,24 +67,8 @@
 
 		public function inscribirAlumno($codigoAlumno, $codigoCurso)
 		{
-			$elCurso = false;
-			$elAlumno = false;
-
-			foreach ( $this->listaCursos as $curso ) {
-				if ( $curso->getCodigoCurso() === $codigoCurso ) {
-					global $elCurso;
-					$elCurso = $curso;
-					break;
-				}
-			}
-
-			foreach ($this->listaAlumnos as $alumno ) {
-				if ( $alumno->getCodigo() === $codigoAlumno ) {
-					global $elAlumno;
-					$elAlumno = $alumno;
-					break;
-				}
-			}
+			$elCurso = self::getCursoPorCodigo($codigoCurso);
+			$elAlumno = self::getAlumnoPorCodigo($codigoAlumno);
 
 			if ( $elCurso && $elAlumno ) {
 				if ( count($elCurso->getAlumnos()) ) {
@@ -113,17 +97,9 @@
 
 		public function asignarProfesores($codigoCurso, $codigoProfesorTitular, $codigoProfesorAdjunto)
 		{
-			$elCurso = false;
+			$elCurso = self::getCursoPorCodigo($codigoCurso);
 			$elProfesorTitular = false;
 			$elProfesorAdjunto = false;
-
-			foreach ($this->listaCursos as $unCurso) {
-				if ( $unCurso->getCodigoCurso() === $codigoCurso ) {
-					global $elCurso;
-					$elCurso = $unCurso;
-					break;
-				}
-			}
 
 			foreach ($this->listaProfesores as $unProfesor) {
 				if ( $unProfesor->getCodigo() === $codigoProfesorTitular ) {
